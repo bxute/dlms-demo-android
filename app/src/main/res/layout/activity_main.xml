@@ -7,13 +7,45 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/trackActionBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Track Action"
+        android:onClick="trackAction"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/trackActionStreamBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Track Action Stream"
+        android:onClick="trackActionStream"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trackActionBtn" />
+
+    <Button
+        android:id="@+id/trackImpressionBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Track Impression"
+        android:onClick="trackImpression"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trackActionStreamBtn" />
+
+    <Button
+        android:id="@+id/trackImpressionStreamBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Track Impression Stream"
+        android:onClick="trackImpressionStream"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trackImpressionBtn"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

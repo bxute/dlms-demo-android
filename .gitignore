@@ -9,3 +9,4 @@ gradle/
 .externalNativeBuild
 .cxx
 local.properties
+gradle.properties
