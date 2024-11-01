@@ -5,16 +5,16 @@ import org.dlms.services.ImpressionEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class EventTracker {
-    private final TrackingEventClient client;
+    private final GrpcClient client;
     private static EventTracker tracker;
 
-    private EventTracker(TrackingEventClient client) {
+    private EventTracker(GrpcClient client) {
         this.client = client;
     }
 
     public static EventTracker getInstance() {
         if (tracker == null) {
-            tracker = new EventTracker(TrackingEventClient.getInstance());
+            tracker = new EventTracker(GrpcClient.getInstance());
         }
         return tracker;
     }

@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.nativelib.EventTracker
-import com.example.nativelib.TrackingEventClient
 import org.dlms.services.ActionEvent
 import org.dlms.services.ImpressionEvent
 

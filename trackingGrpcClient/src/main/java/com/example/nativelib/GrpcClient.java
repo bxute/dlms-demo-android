@@ -10,22 +10,22 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
-public class TrackingEventClient {
+public class GrpcClient {
     private static final int PORT = 50052;
     private EventTrackingServiceGrpc.EventTrackingServiceStub asyncStub;
     private StreamObserver<ActionEvent> actionEventStream;
     private StreamObserver<ImpressionEvent> impressionEventStream;
 
-    private static TrackingEventClient instance;
-    public static TrackingEventClient init() {
+    private static GrpcClient instance;
+    public static GrpcClient init() {
         if (instance == null) {
-            instance = new TrackingEventClient();
+            instance = new GrpcClient();
             instance.initialize();
         }
         return instance;
     }
 
-    public static TrackingEventClient getInstance() {
+    public static GrpcClient getInstance() {
         return init();
     }
 
