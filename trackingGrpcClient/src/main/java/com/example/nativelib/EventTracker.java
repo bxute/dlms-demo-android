@@ -15,7 +15,9 @@ public class EventTracker {
 
     public static EventTracker getInstance() {
         if (tracker == null) {
-            tracker = new EventTracker(GrpcClient.getInstance());
+            GrpcClient client = GrpcClient.getInstance();
+            client.createEventStreams();
+            tracker = new EventTracker(client);
         }
         return tracker;
     }
