@@ -7,6 +7,7 @@ import org.dlms.services.TrackEventResponse;
 import io.grpc.stub.StreamObserver;
 
 public class EventResponseObserver implements StreamObserver<TrackEventResponse> {
+    private final OnErrorCallback error;
     private String tag;
     @Override
     public void onNext(TrackEventResponse value) {
@@ -15,7 +16,10 @@ public class EventResponseObserver implements StreamObserver<TrackEventResponse>
 
     @Override
     public void onError(Throwable t) {
-        t.printStackTrace();
+        Log.d("EventResponseObserver", "onError: " + tag);
+        if (error != null) {
+            error.onError();
+        }
     }
 
     @Override
@@ -23,7 +27,12 @@ public class EventResponseObserver implements StreamObserver<TrackEventResponse>
         Log.d("EventResponseObserver", "onCompleted: ");
     }
 
-    public EventResponseObserver(String tag) {
+    public EventResponseObserver(String tag, OnErrorCallback error) {
         this.tag = tag;
+        this.error = error;
+    }
+
+    interface OnErrorCallback {
+        void onError();
     }
 }

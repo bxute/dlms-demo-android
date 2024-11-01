@@ -12,6 +12,7 @@ import io.grpc.stub.StreamObserver;
 
 public class TrackingEventClient {
     private static final int PORT = 50052;
+    private EventTrackingServiceGrpc.EventTrackingServiceStub asyncStub;
     private StreamObserver<ActionEvent> actionEventStream;
     private StreamObserver<ImpressionEvent> impressionEventStream;
 
@@ -32,25 +33,43 @@ public class TrackingEventClient {
         ManagedChannel channel = ManagedChannelBuilder
                 .forAddress("192.168.1.10", PORT)
                 .usePlaintext()
-                .enableRetry()
                 .defaultServiceConfig(ServiceConfig.createServiceConfig())
+                .enableRetry()
                 .build();
 
-        EventTrackingServiceGrpc.EventTrackingServiceStub stub = EventTrackingServiceGrpc.newStub(channel);
-        startStreaming(stub);
+        asyncStub = EventTrackingServiceGrpc.newStub(channel);
+        createStreams();
     }
 
-    private void startStreaming(EventTrackingServiceGrpc.EventTrackingServiceStub stub) {
-        impressionEventStream = createActionEventStream(stub);
-        actionEventStream = createImpressionEventStream(stub);
+    private void createStreams() {
+        impressionEventStream = createActionEventStream();
+        actionEventStream = createImpressionEventStream();
     }
 
-    private StreamObserver<ActionEvent> createImpressionEventStream(EventTrackingServiceGrpc.EventTrackingServiceStub stub) {
-        return stub.trackAction(new EventResponseObserver("ACTION"));
+    private void reconnectStreamWithBackoff() {
+        int attempt = 1;
+        int maxAttempts = 5;
+        while (attempt <= maxAttempts) {
+            try {
+                long backoffMillis = (long) Math.pow(2, attempt) * 100;
+                System.out.printf("Retrying connection in %d ms (attempt %d)%n", backoffMillis, attempt);
+                Thread.sleep(1500);
+                createStreams();  // Re-establish the stream
+                return;  // Exit after successful reconnection
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            attempt++;
+        }
+        System.err.println("Failed to reconnect after " + maxAttempts + " attempts.");
     }
 
-    private StreamObserver<ImpressionEvent> createActionEventStream(EventTrackingServiceGrpc.EventTrackingServiceStub stub) {
-        return stub.trackImpression(new EventResponseObserver("IMPRESSION"));
+    private StreamObserver<ActionEvent> createImpressionEventStream() {
+        return asyncStub.trackAction(new EventResponseObserver("ACTION", this::reconnectStreamWithBackoff));
+    }
+
+    private StreamObserver<ImpressionEvent> createActionEventStream() {
+        return asyncStub.trackImpression(new EventResponseObserver("IMPRESSION", this::reconnectStreamWithBackoff));
     }
 
     public StreamObserver<ActionEvent> getActionEventStream() {
