@@ -2,6 +2,7 @@ package com.example.nativelib;
 
 import org.dlms.services.ActionEvent;
 import org.dlms.services.ImpressionEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EventTracker {
@@ -25,5 +26,9 @@ public class EventTracker {
 
     public void trackActionEvent(@Nullable ActionEvent event) {
         client.getActionEventStream().onNext(event);
+    }
+
+    public void init() {
+        client.createEventStreams();
     }
 }

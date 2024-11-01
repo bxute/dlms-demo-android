@@ -61,8 +61,6 @@ public class GrpcClient {
         chatServiceStub = ChatServiceGrpc.newStub(channel);
         liveScoreServiceStub = LiveScoreServiceGrpc.newStub(channel);
         userServiceStub = UserServiceGrpc.newStub(channel);
-        createEventStreams();
-        createChatStream();
     }
 
     public void requestLiveScores(ScoreRequest request, StreamObserver<ScoreResponse> responseObserver) {
@@ -73,11 +71,11 @@ public class GrpcClient {
         userServiceStub.getUser(userRequest, responseObserver);
     }
 
-    private void createChatStream() {
+    void createChatStream() {
         chatStream = chatServiceStub.sendChat(new ChatStreamObserver());
     }
 
-    private void createEventStreams() {
+    void createEventStreams() {
         impressionEventStream = createActionEventStream();
         actionEventStream = createImpressionEventStream();
     }
