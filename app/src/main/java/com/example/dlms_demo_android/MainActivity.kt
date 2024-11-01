@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.nativelib.TrackingEventClient
+import org.dlms.services.ActionEvent
+import org.dlms.services.ImpressionEvent
 
 class MainActivity : AppCompatActivity() {
     private lateinit var tracker: TrackingEventClient
@@ -25,20 +27,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun trackAction(view: View) {
-        tracker.trackActionEvent()
+        val event = ActionEvent
+            .newBuilder()
+            .setEventId(System.currentTimeMillis().toString())
+            .setActionType("click")
+            .setTimestamp(System.currentTimeMillis())
+            .setUserId("ankit1")
+            .build()
+        tracker.trackActionEvent(event)
     }
 
     fun trackActionStream(view: View) {
         repeat(100) {
-            tracker.trackActionEvent()
+            trackAction(view)
         }
     }
+
     fun trackImpression(view: View) {
-        tracker.trackImpressionEvent()
+        val event = ImpressionEvent
+            .newBuilder()
+            .setTimestamp(System.currentTimeMillis())
+            .setImpressionId("")
+            .setUserId("ankit1")
+            .setTimestamp(System.currentTimeMillis())
+            .build()
+        tracker.trackImpressionEvent(event)
     }
+
     fun trackImpressionStream(view: View) {
         repeat(100) {
-            tracker.trackImpressionEvent()
+            trackImpression(view)
         }
     }
 }

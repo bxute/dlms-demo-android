@@ -50,26 +50,12 @@ public class TrackingEventClient {
         impressionEventStreamObserver = stub.trackImpression(new EventResponseObserver());
     }
 
-    public void trackActionEvent() {
-        ActionEvent event = ActionEvent
-                .newBuilder()
-                .setEventId(String.valueOf(System.currentTimeMillis()))
-                .setActionType("click")
-                .setTimestamp(System.currentTimeMillis())
-                .setUserId("ankit1")
-                .build();
+    public void trackActionEvent(ActionEvent event) {
         Log.d("TrackingEventClient", "trackActionEvent called");
         actionEventStreamObserver.onNext(event);
     }
 
-    public void trackImpressionEvent() {
-        ImpressionEvent event = ImpressionEvent
-                .newBuilder()
-                .setTimestamp(System.currentTimeMillis())
-                .setImpressionId("")
-                .setUserId("ankit1")
-                .setTimestamp(System.currentTimeMillis())
-                .build();
+    public void trackImpressionEvent(ImpressionEvent event) {
         Log.d("TrackingEventClient", "trackImpressionEvent called");
         impressionEventStreamObserver.onNext(event);
     }

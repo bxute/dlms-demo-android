@@ -79,11 +79,11 @@ dependencies {
     implementation(libs.grpc.okhttp)
     implementation(libs.grpc.protobuf.lite)
     implementation(libs.grpc.stub)
-    implementation(libs.protobuf.javalite)
-    // annotation
     implementation(libs.javax.annotation.api)
-    // schemas
-    implementation(libs.dlms.schemas)
+
+    // use api to make it transitively available to dependent module.
+    api(libs.dlms.schemas)
+    api(libs.protobuf.javalite)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

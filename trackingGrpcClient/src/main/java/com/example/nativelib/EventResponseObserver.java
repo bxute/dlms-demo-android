@@ -6,7 +6,6 @@ import org.dlms.services.TrackEventResponse;
 
 import io.grpc.stub.StreamObserver;
 
-
 public class EventResponseObserver implements StreamObserver<TrackEventResponse> {
     @Override
     public void onNext(TrackEventResponse value) {
