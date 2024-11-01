@@ -1,10 +1,20 @@
 package com.example.nativelib;
 
 import com.example.nativelib.serviceconfig.ServiceConfig;
+import com.example.nativelib.streamobservers.ChatStreamObserver;
+import com.example.nativelib.streamobservers.EventResponseObserver;
 
 import org.dlms.services.ActionEvent;
+import org.dlms.services.ChatMessage;
+import org.dlms.services.ChatServiceGrpc;
 import org.dlms.services.EventTrackingServiceGrpc;
 import org.dlms.services.ImpressionEvent;
+import org.dlms.services.LiveScoreServiceGrpc;
+import org.dlms.services.ScoreRequest;
+import org.dlms.services.ScoreResponse;
+import org.dlms.services.UserRequest;
+import org.dlms.services.UserResponse;
+import org.dlms.services.UserServiceGrpc;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -12,9 +22,19 @@ import io.grpc.stub.StreamObserver;
 
 public class GrpcClient {
     private static final int PORT = 50052;
-    private EventTrackingServiceGrpc.EventTrackingServiceStub asyncStub;
+
+    // BIDI-STREAMING
+    private EventTrackingServiceGrpc.EventTrackingServiceStub eventTrackingServiceStub;
+    // CLIENT-STREAMING
+    private ChatServiceGrpc.ChatServiceStub chatServiceStub;
+    // SERVER-STREAMING
+    private LiveScoreServiceGrpc.LiveScoreServiceStub liveScoreServiceStub;
+    // UNIDIRECTIONAL
+    private UserServiceGrpc.UserServiceStub userServiceStub;
+
     private StreamObserver<ActionEvent> actionEventStream;
     private StreamObserver<ImpressionEvent> impressionEventStream;
+    private StreamObserver<ChatMessage> chatStream;
 
     private static GrpcClient instance;
     public static GrpcClient init() {
@@ -37,11 +57,27 @@ public class GrpcClient {
                 .enableRetry()
                 .build();
 
-        asyncStub = EventTrackingServiceGrpc.newStub(channel);
-        createStreams();
+        eventTrackingServiceStub = EventTrackingServiceGrpc.newStub(channel);
+        chatServiceStub = ChatServiceGrpc.newStub(channel);
+        liveScoreServiceStub = LiveScoreServiceGrpc.newStub(channel);
+        userServiceStub = UserServiceGrpc.newStub(channel);
+        createEventStreams();
+        createChatStream();
     }
 
-    private void createStreams() {
+    public void requestLiveScores(ScoreRequest request, StreamObserver<ScoreResponse> responseObserver) {
+        liveScoreServiceStub.getLiveScores(request, responseObserver);
+    }
+
+    void fetchUserDetails(UserRequest userRequest, StreamObserver<UserResponse> responseObserver) {
+        userServiceStub.getUser(userRequest, responseObserver);
+    }
+
+    private void createChatStream() {
+        chatStream = chatServiceStub.sendChat(new ChatStreamObserver());
+    }
+
+    private void createEventStreams() {
         impressionEventStream = createActionEventStream();
         actionEventStream = createImpressionEventStream();
     }
@@ -55,7 +91,7 @@ public class GrpcClient {
                 long backoffMillis = (long) Math.pow(2, attempt) * 200;
                 System.out.printf("Retrying connection in %d ms (attempt %d)%n", backoffMillis, attempt);
                 Thread.sleep(1500);
-                createStreams();  // Re-establish the stream
+                createEventStreams();  // Re-establish the stream
                 return;  // Exit after successful reconnection
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -66,11 +102,11 @@ public class GrpcClient {
     }
 
     private StreamObserver<ActionEvent> createImpressionEventStream() {
-        return asyncStub.streamAction(new EventResponseObserver("ACTION", this::reconnectStreamWithBackoff));
+        return eventTrackingServiceStub.streamAction(new EventResponseObserver("ACTION", this::reconnectStreamWithBackoff));
     }
 
     private StreamObserver<ImpressionEvent> createActionEventStream() {
-        return asyncStub.streamImpression(new EventResponseObserver("IMPRESSION", this::reconnectStreamWithBackoff));
+        return eventTrackingServiceStub.streamImpression(new EventResponseObserver("IMPRESSION", this::reconnectStreamWithBackoff));
     }
 
     public StreamObserver<ActionEvent> getActionEventStream() {
@@ -79,5 +115,9 @@ public class GrpcClient {
 
     public StreamObserver<ImpressionEvent> getImpressionEventStream() {
         return impressionEventStream;
+    }
+
+    public StreamObserver<ChatMessage> getChatStream() {
+        return chatStream;
     }
 }

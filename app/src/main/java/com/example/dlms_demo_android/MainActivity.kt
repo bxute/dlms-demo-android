@@ -1,5 +1,6 @@
 package com.example.dlms_demo_android
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -11,13 +12,10 @@ import org.dlms.services.ActionEvent
 import org.dlms.services.ImpressionEvent
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var tracker: EventTracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        tracker = EventTracker.getInstance();
-
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -26,37 +24,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun trackAction(view: View) {
-        val event = ActionEvent
-            .newBuilder()
-            .setEventId(System.currentTimeMillis().toString())
-            .setActionType("click")
-            .setTimestamp(System.currentTimeMillis())
-            .setUserId("ankit1")
-            .build()
-        tracker.trackActionEvent(event)
+    fun openEventStreaming(view: View) {
+        startActivity(Intent(this, EventStreamActivity::class.java))
     }
-
-    fun trackActionStream(view: View) {
-        repeat(100) {
-            trackAction(view)
-        }
+    fun openScoreStreaming(view: View) {
+        startActivity(Intent(this, ScoreStreamingActivity::class.java))
     }
-
-    fun trackImpression(view: View) {
-        val event = ImpressionEvent
-            .newBuilder()
-            .setTimestamp(System.currentTimeMillis())
-            .setImpressionId("")
-            .setUserId("ankit1")
-            .setTimestamp(System.currentTimeMillis())
-            .build()
-        tracker.trackImpressionEvent(event)
+    fun openChatStreaming(view: View) {
+        startActivity(Intent(this, ChatStreamingActivity::class.java))
     }
-
-    fun trackImpressionStream(view: View) {
-        repeat(100) {
-            trackImpression(view)
-        }
+    fun fetchUserDetails(view: View) {
+        startActivity(Intent(this, UserDetailsActivity::class.java))
     }
 }

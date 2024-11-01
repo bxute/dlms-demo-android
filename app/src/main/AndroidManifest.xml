@@ -15,6 +15,18 @@
         android:theme="@style/Theme.DLMSDemoAndroid"
         tools:targetApi="31">
         <activity
+            android:name=".UserDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatStreamingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ScoreStreamingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EventStreamActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

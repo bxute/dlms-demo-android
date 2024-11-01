@@ -1,4 +1,4 @@
-package com.example.nativelib;
+package com.example.nativelib.streamobservers;
 
 import android.util.Log;
 
@@ -32,7 +32,7 @@ public class EventResponseObserver implements StreamObserver<TrackEventResponse>
         this.error = error;
     }
 
-    interface OnErrorCallback {
+    public interface OnErrorCallback {
         void onError();
     }
 }

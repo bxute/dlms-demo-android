@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScoreStreamingActivity">
+
+    <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Live Score Server-Streaming"
+        android:textSize="24sp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/startServerScores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stream Live Scores"
+        android:onClick="streamLiveScores"
+        android:layout_marginTop="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/scoreBoard"
+        app:layout_constraintTop_toBottomOf="@id/startServerScores"
+        app:layout_constraintStart_toStartOf="@id/startServerScores"
+        app:layout_constraintEnd_toEndOf="@id/startServerScores"
+        android:layout_width="wrap_content"
+        android:maxLines="8"
+        android:layout_marginTop="16dp"
+        android:ellipsize="start"
+        android:layout_height="200dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
