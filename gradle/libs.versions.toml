@@ -1,6 +1,6 @@
 [versions]
 agp = "8.5.0"
-dlmsSchemas = "1.0.14"
+dlmsSchemas = "1.0.20"
 grpcVersion = "1.68.0"
 javaxAnnotationApi = "1.3.2"
 kotlin = "1.9.0"
