@@ -1,4 +1,6 @@
 import java.net.URI
+import java.util.Properties
+
 pluginManagement {
     repositories {
         google {
@@ -12,9 +14,18 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-val gprUser: String? by settings
-val gprToken: String? by settings
 
+// Read local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootDir.resolve("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { stream ->
+        localProperties.load(stream)
+    }
+}
+
+val gprUser: String? by localProperties
+val gprToken: String? by localProperties
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
