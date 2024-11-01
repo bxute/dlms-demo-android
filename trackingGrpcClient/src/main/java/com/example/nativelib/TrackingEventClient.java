@@ -66,11 +66,11 @@ public class TrackingEventClient {
     }
 
     private StreamObserver<ActionEvent> createImpressionEventStream() {
-        return asyncStub.trackAction(new EventResponseObserver("ACTION", this::reconnectStreamWithBackoff));
+        return asyncStub.streamAction(new EventResponseObserver("ACTION", this::reconnectStreamWithBackoff));
     }
 
     private StreamObserver<ImpressionEvent> createActionEventStream() {
-        return asyncStub.trackImpression(new EventResponseObserver("IMPRESSION", this::reconnectStreamWithBackoff));
+        return asyncStub.streamImpression(new EventResponseObserver("IMPRESSION", this::reconnectStreamWithBackoff));
     }
 
     public StreamObserver<ActionEvent> getActionEventStream() {
