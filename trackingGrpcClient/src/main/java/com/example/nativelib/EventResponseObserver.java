@@ -9,7 +9,7 @@ import io.grpc.stub.StreamObserver;
 public class EventResponseObserver implements StreamObserver<TrackEventResponse> {
     @Override
     public void onNext(TrackEventResponse value) {
-        Log.d("EventResponseObserver", "onNext: ");
+        Log.d("EventResponseObserver", "Response : " + value.getMessage());
     }
 
     @Override
