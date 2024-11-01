@@ -46,12 +46,13 @@ public class TrackingEventClient {
         actionEventStream = createImpressionEventStream();
     }
 
+    int attempt = 1;
     private void reconnectStreamWithBackoff() {
-        int attempt = 1;
+        attempt++;
         int maxAttempts = 5;
         while (attempt <= maxAttempts) {
             try {
-                long backoffMillis = (long) Math.pow(2, attempt) * 100;
+                long backoffMillis = (long) Math.pow(2, attempt) * 200;
                 System.out.printf("Retrying connection in %d ms (attempt %d)%n", backoffMillis, attempt);
                 Thread.sleep(1500);
                 createStreams();  // Re-establish the stream
