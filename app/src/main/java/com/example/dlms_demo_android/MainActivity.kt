@@ -6,17 +6,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.nativelib.EventTracker
 import com.example.nativelib.TrackingEventClient
 import org.dlms.services.ActionEvent
 import org.dlms.services.ImpressionEvent
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var tracker: TrackingEventClient
+    private lateinit var tracker: EventTracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        tracker = TrackingEventClient.getInstance();
+        tracker = EventTracker.getInstance();
 
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
