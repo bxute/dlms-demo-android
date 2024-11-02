@@ -1,5 +1,7 @@
 package com.example.nativelib;
 
+import com.example.nativelib.interceptors.LoggingClientInterceptor;
+import com.example.nativelib.monitor.GrpcChannelMonitor;
 import com.example.nativelib.serviceconfig.ServiceConfig;
 import com.example.nativelib.streamobservers.ChatStreamObserver;
 import com.example.nativelib.streamobservers.EventResponseObserver;
@@ -53,10 +55,13 @@ public class GrpcClient {
         ManagedChannel channel = ManagedChannelBuilder
                 .forAddress("192.168.1.10", PORT)
                 .usePlaintext()
+                .enableRetry()
+                .disableServiceConfigLookUp()
                 .defaultServiceConfig(ServiceConfig.createServiceConfig())
                 .enableRetry()
+                .intercept(new LoggingClientInterceptor())
                 .build();
-
+        //GrpcChannelMonitor.monitorChannel(channel);
         eventTrackingServiceStub = EventTrackingServiceGrpc.newStub(channel);
         chatServiceStub = ChatServiceGrpc.newStub(channel);
         liveScoreServiceStub = LiveScoreServiceGrpc.newStub(channel);
@@ -67,7 +72,7 @@ public class GrpcClient {
         liveScoreServiceStub.getLiveScores(request, responseObserver);
     }
 
-    void fetchUserDetails(UserRequest userRequest, StreamObserver<UserResponse> responseObserver) {
+    public void fetchUserDetails(UserRequest userRequest, StreamObserver<UserResponse> responseObserver) {
         userServiceStub.getUser(userRequest, responseObserver);
     }
 
