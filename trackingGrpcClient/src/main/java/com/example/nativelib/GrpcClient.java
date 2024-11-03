@@ -3,6 +3,7 @@ package com.example.nativelib;
 import android.content.Context;
 
 import com.example.nativelib.interceptors.LoggingClientInterceptor;
+import com.example.nativelib.monitor.GrpcChannelMonitor;
 import com.example.nativelib.serviceconfig.ServiceConfig;
 import com.example.nativelib.streamobservers.ChatStreamObserver;
 import com.example.nativelib.streamobservers.EventResponseObserver;
@@ -74,6 +75,7 @@ public class GrpcClient {
 
     private void initialize(Context appContext) {
         ManagedChannel channel = createChannel(appContext, true);
+        GrpcChannelMonitor.monitorChannel(channel);
         eventTrackingServiceStub = EventTrackingServiceGrpc.newStub(channel);
         chatServiceStub = ChatServiceGrpc.newStub(channel);
         liveScoreServiceStub = LiveScoreServiceGrpc.newStub(channel);

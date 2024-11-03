@@ -12,6 +12,6 @@ public class ChannelStateChecker {
 
     public void checkState() {
         ConnectivityState state = channel.getState(true); // true to request connection if IDLE
-        System.out.println("Channel state: " + state);
+        System.out.println("[ " + Thread.currentThread().getName() +" ] Channel state: " + state);
     }
 }
