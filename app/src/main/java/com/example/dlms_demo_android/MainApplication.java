@@ -8,6 +8,6 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        GrpcClient.init();
+        GrpcClient.init(this);
     }
 }
